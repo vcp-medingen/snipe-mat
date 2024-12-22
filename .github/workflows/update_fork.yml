@@ -7,13 +7,15 @@ on:
 
 jobs:
   sync:
-
     runs-on: ubuntu-latest
-
+    name: Sync with upstream latest
     steps:
-      - uses: tgymnich/fork-sync@v1.8
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Pull upstream changes
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
         with:
-          owner: snipe
-          repo: snipe-it
-          base: master
-          head: master
+          target_sync_branch: master
+          upstream_sync_branch: master
+          upstream_sync_repo: snipe/snipe-it
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
