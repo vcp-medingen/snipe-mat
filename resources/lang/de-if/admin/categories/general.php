@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'asset_categories' 					=> 'Asset-Kategorien',
+    'asset_categories' 					=> 'Gegenstand-Kategorien',
     'category_name'  					=> 'Kategorie Name',
     'checkin_email'                     => 'Beim Checkin/Checkout eine E-Mail an den Benutzer senden.',
     'checkin_email_notification'        => 'Dieser Nutzer erhält beim Checkin/Checkout eine E-Mail.',
@@ -11,9 +11,9 @@ return array(
     'email_will_be_sent_due_to_global_eula' => 'Eine E-Mail wird an den Benutzer gesendet, da die globale EULA verwendet wird.',
     'email_will_be_sent_due_to_category_eula' => 'Eine E-Mail wird an den Benutzer gesendet, da eine EULA für diese Kategorie festgelegt ist.',
     'eula_text'							=> 'Kategorie EULA',
-    'eula_text_help'					=> 'Dieses Feld erlaubt dir, die EULA je nach Asset-Typ anzupassen. Wenn du nur eine EULA für alle Assets haben möchtest, aktiviere die Checkbox unten, um die Standard-EULA zu verwenden.',
+    'eula_text_help'					=> 'Dieses Feld erlaubt dir, die EULA je nach Gegenstands-Typ anzupassen. Wenn du nur eine EULA für alle Gegenstände haben möchtest, aktiviere die Checkbox unten, um die Standard-EULA zu verwenden.',
     'name'                              => 'Kategoriename',
-    'require_acceptance'				=> 'Benutzer müssen die Annahme von Assets dieser Kategorie bestätigen.',
+    'require_acceptance'				=> 'Benutzer müssen die Annahme von Gegenständen dieser Kategorie bestätigen.',
     'required_acceptance'				=> 'Dieser Benutzer erhält eine E-Mail zur Bestätigung der Annahme des Gegenstands.',
     'required_eula'						=> 'Dieser Benutzer erhält eine Kopie der EULA via Email',
     'no_default_eula'					=> 'Keine Standard EULA gefunden. Füge eine in den Einstellungen hinzu.',
