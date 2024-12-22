@@ -120,9 +120,6 @@
         //if there's already a user selected, make sure their checked-out assets show up
         // (if there isn't one, it won't do anything)
         $('#assigned_user').change();
-        $('#asset_selector').on('select2:select', (e) => {
-            $('#assets_to_checkout_div').click();
-        })
     });
 </script>
 
