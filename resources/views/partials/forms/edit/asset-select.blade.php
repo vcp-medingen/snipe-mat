@@ -16,7 +16,7 @@
                     @if(isset($asset_ids))
                         @foreach($asset_ids as $asset_id)
                             <option value="{{ $asset_id }}" selected="selected" role="option" aria-selected="true"
-                                    role="option">
+                                    role="option" onclick="$('#asset_tag').focus();">
                                 {{ (\App\Models\Asset::find($asset_id)) ? \App\Models\Asset::find($asset_id)->present()->fullName : '' }}
                             </option>
                         @endforeach
