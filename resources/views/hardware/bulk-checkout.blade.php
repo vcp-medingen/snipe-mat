@@ -24,7 +24,7 @@
         <h2 class="box-title"> {{ trans('admin/hardware/form.tag') }} </h2>
       </div>
       <div class="box-body">
-        <form class="form-horizontal" id="bulk-checkout-form" method="post" action="" autocomplete="off">
+        <form class="form-horizontal" method="post" action="" autocomplete="off">
           {{ csrf_field() }}
 
             @include ('partials.forms.edit.asset-select', [
@@ -120,13 +120,6 @@
         //if there's already a user selected, make sure their checked-out assets show up
         // (if there isn't one, it won't do anything)
         $('#assigned_user').change();
-
-        $('#assigned_assets_select').on('keypress', (e) => {
-            if (e.which === 13) {
-                $('#assets_to_checkout_div').click();
-                $(this).focus();
-            }
-        })
     });
 </script>
 
