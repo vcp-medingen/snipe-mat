@@ -122,7 +122,7 @@
         $('#assigned_user').change();
         $('#assigned_assets_select').on('select2:select', (e) => {
             console.log('selected');
-            $('#assets_to_checkout_div .select2-containter .selection.needsclick').click();
+            $('#assigned_assets_select').select2('open')
         })
     });
 </script>
