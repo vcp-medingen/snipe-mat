@@ -121,6 +121,7 @@
         // (if there isn't one, it won't do anything)
         $('#assigned_user').change();
         $('#asset_selector').on('select2:select', (e) => {
+            console.log('selected');
             $('#assets_to_checkout_div').click();
         })
     });
