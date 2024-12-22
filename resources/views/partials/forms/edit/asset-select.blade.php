@@ -27,11 +27,3 @@
     </div>
     {!! $errors->first($fieldname, '<div class="col-md-8 col-md-offset-3"><span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span></div>') !!}
 </div>
-
-@section('moar_scripts')
-<script>
-    $('#asset_selector').on('select2:select', (e) => {
-        $('#assets_to_checkout_div').click();
-    })
-</script>
-@stop
