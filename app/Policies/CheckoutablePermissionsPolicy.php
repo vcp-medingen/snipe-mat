@@ -14,12 +14,7 @@ abstract class CheckoutablePermissionsPolicy extends SnipePermissionsPolicy
      */
     public function checkout(User $user, $item = null)
     {
-        if  ($item->target instanceof User && $item->target->id == $user->id) {
-            return $user->hasAccess($this->columnName().'.checkout');
-        } else{
-            return $user->hasAccess($this->columnName().'checkout') &&
-                $user->hasAccess($this->columnName().'.checkout_for_others');
-        }
+        return $user->hasAccess($this->columnName().'.checkout');
     }
 
     /**

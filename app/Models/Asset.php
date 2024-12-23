@@ -342,10 +342,6 @@ class Asset extends Depreciable
             $this->expected_checkin = $expected_checkin;
         }
 
-        if (!($this->assignedTo()->is($target) && $this->assignedTo()->hasAccess('assets.checkout_for_others'))) {
-            throw new CheckoutNotAllowed("You do not have permission to check out this asset.");
-        }
-
         $this->last_checkout = $checkout_at;
         $this->name = $name;
 
