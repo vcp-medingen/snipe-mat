@@ -113,6 +113,13 @@ return [
             'display'    => true,
         ],
 
+        [
+            'permission' => 'assets.checkout_for_others',
+            'label'      => 'Checkout Assets for other users',
+            'note'       => '',
+            'display'    => true,
+        ],
+
     ],
 
     'Accessories' => [
