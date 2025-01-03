@@ -871,8 +871,8 @@ dir="{{ Helper::determineLanguageDirection() }}">
 
                 <div class="1hidden-xs pull-left">
                     <div class="pull-left" >
-                        <a target="_blank" href="https://snipeitapp.com" rel="noopener">Snipe-IT</a> is open source software, made with <x-icon type="heart" style="color: #a94442; font-size: 10px" />
-                            <span class="sr-only">love</span> by <a href="https://bsky.app/profile/snipeitapp.com" rel="noopener">@snipeitapp</a>.
+                        <a target="_blank" href="https://snipeitapp.com" rel="noopener">MAT-IT</a> ist quelloffene Software, programmiert mit <x-icon type="heart" style="color: #a94442; font-size: 10px" />
+                            <span class="sr-only">love</span> von <a href="https://bsky.app/profile/snipeitapp.com" rel="noopener">@snipeitapp</a> und zur Verfügung gestellt vom Stamm Silberkranich.
                     </div>
                     <div class="pull-right">
                     @if ($snipeSettings->version_footer!='off')
