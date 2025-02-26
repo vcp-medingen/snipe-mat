@@ -13,5 +13,10 @@ return [
         'user_state' => 'Användarens län',
         'user_country' => 'Användarens land',
         'user_zip' => 'Användarens postnummer'
-    ]
+    ],
+    'open_saved_template' => 'Öppna sparad mall',
+    'save_template' =>  'Spara mall',
+    'select_a_template' => 'Välj mall',
+    'template_name' => 'Mallnamn',
+    'update_template' => 'Uppdatera mall',
 ];

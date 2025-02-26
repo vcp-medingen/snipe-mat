@@ -125,6 +125,10 @@ class LdapSync extends Command
              */
             $attributes = array_values(array_filter($ldap_map));
 
+            if (Setting::getSettings()->is_ad === 1 && is_null($ldap_map['active_flag'])) {
+                $attributes[] = 'useraccountcontrol';
+            }
+
             $results = Ldap::findLdapUsers($search_base, -1, $filter, $attributes);
 
         } catch (\Exception $e) {
@@ -427,7 +431,13 @@ class LdapSync extends Command
                     $user->groups()->attach($ldap_default_group);
                 }
                 //updates assets location based on user's location
-                Asset::where('assigned_to', '=', $user->id)->where('assigned_type', '=', User::class)->update(['location_id' => $user->location_id]);
+                if ($user->wasChanged('location_id')) {
+                    foreach ($user->assets as $asset) {
+                        $asset->location_id = $user->location_id;
+                        // TODO: somehow add note? "Asset Location Changed because of thing"
+                        $asset->save();
+                    }
+                }
 
             } else {
                 foreach ($user->getErrors()->getMessages() as $key => $err) {

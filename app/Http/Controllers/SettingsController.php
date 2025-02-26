@@ -192,6 +192,7 @@ class SettingsController extends Controller
         $settings->next_auto_tag_base = 1;
         $settings->auto_increment_assets = $request->input('auto_increment_assets', 0);
         $settings->auto_increment_prefix = $request->input('auto_increment_prefix');
+        $settings->zerofill_count = $request->input('zerofill_count') ?: 0;
 
         if ((! $user->isValid()) || (! $settings->isValid())) {
             return redirect()->back()->withInput()->withErrors($user->getErrors())->withErrors($settings->getErrors());
@@ -255,7 +256,7 @@ class SettingsController extends Controller
         Artisan::call('migrate', ['--force' => true]);
         if ((! file_exists(storage_path().'/oauth-private.key')) || (! file_exists(storage_path().'/oauth-public.key'))) {
             Artisan::call('migrate', ['--path' => 'vendor/laravel/passport/database/migrations', '--force' => true]);
-            Artisan::call('passport:install');
+            Artisan::call('passport:install', ['--no-interaction' => true]);
         }
 
         return view('setup/migrate')
@@ -799,6 +800,7 @@ class SettingsController extends Controller
         }
 
         if ($setting->save()) {
+
             return redirect()->route('settings.labels.index')
                 ->with('success', trans('admin/settings/message.update.success'));
         }
@@ -868,7 +870,6 @@ class SettingsController extends Controller
         }
 
         if ($setting->save()) {
-            $setting->update_client_side_cert_files();
             return redirect()->route('settings.ldap.index')
                 ->with('success', trans('admin/settings/message.update.success'));
         }
