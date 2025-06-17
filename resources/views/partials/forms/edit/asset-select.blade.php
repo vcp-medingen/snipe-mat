@@ -28,3 +28,50 @@
     {!! $errors->first($fieldname, '<div class="col-md-8 col-md-offset-3"><span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span></div>') !!}
 
 </div>
+
+<div id="{{ $asset_selector_div_id ?? "assigned_asset" }}_error" class="error-message text-danger" style="display: none;"><i class="fas fa-exclamation-triangle"></i> {{ trans('general.asset_already_added') }}</div>
+
+<script nonce="{{ csrf_token() }}">
+    $(document).ready(function() {
+        var selectId = "{{ (isset($select_id)) ? $select_id : 'assigned_asset_select' }}";
+
+        // Handler für die Barcode-Eingabe
+        $('#' + selectId).on('keypress', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                var inputVal = $(this).val();
+                var errorDiv = $('#{{ $asset_selector_div_id ?? "assigned_asset" }}_error');
+
+                // Überprüfen, ob das Asset bereits ausgewählt wurde
+                var isAlreadySelected = false;
+
+                // Für Einzelauswahl
+                if (!$(this).prop('multiple')) {
+                    isAlreadySelected = $(this).val() === inputVal;
+                }
+                // Für Mehrfachauswahl
+                else {
+                    var selectedValues = $(this).val() || [];
+                    isAlreadySelected = selectedValues.includes(inputVal);
+                }
+
+                if (isAlreadySelected) {
+                    errorDiv.text('{{ trans('general.asset_already_added') }}').show();
+                    setTimeout(function() {
+                        errorDiv.hide();
+                    }, 3000); // Fehlermeldung nach 3 Sekunden ausblenden
+                } else {
+                    errorDiv.hide();
+                }
+
+                // Focus zurück auf das Eingabefeld setzen
+                $(this).select2('open');
+            }
+        });
+
+        // Fehler ausblenden bei anderen Events
+        $('#' + selectId).on('change', function() {
+            $('#{{ $asset_selector_div_id ?? "assigned_asset" }}_error').hide();
+        });
+    });
+</script>
