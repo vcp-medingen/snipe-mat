@@ -62,6 +62,7 @@ if ($argc > 1){
                 break;
             case '--no-interactive':
                 $no_interactive = true;
+                putenv("COMPOSER_NO_INTERACTION=1"); //put composer in non-interactive mode aswell
                 break;
             default: // for legacy support from before we started using --branch
                 $branch = $argv[$arg];
@@ -85,8 +86,8 @@ echo "- run migrations to get your schema up to date \n";
 echo "- clear out old cache settings\e[39m\n\n";
 
 
-// Fetching most current upgrade requirements from github. Read more here: https://github.com/snipe/snipe-it/pull/14127
-$remote_requirements_file = "https://raw.githubusercontent.com/snipe/snipe-it/$branch/.upgrade_requirements.json";
+// Fetching most current upgrade requirements from github. Read more here: https://github.com/grokability/snipe-it/pull/14127
+$remote_requirements_file = "https://raw.githubusercontent.com/grokability/snipe-it/$branch/.upgrade_requirements.json";
 $upgrade_requirements_raw = url_get_contents($remote_requirements_file);
 $upgrade_requirements = json_decode($upgrade_requirements_raw, true);
 if (! $upgrade_requirements) {
@@ -151,8 +152,7 @@ if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') || (!function_exists('posix_get
 
 echo "\e[95m--------------------------------------------------------\n";
 echo "STEP 1: Checking .env file: \n";
-echo "- Your .env is located at ".getcwd()."/.env \n";
-echo "--------------------------------------------------------\e[39m\\n\n";
+echo "--------------------------------------------------------\e[39m\n\n";
 
 
 // Check the .env looks ok
@@ -163,7 +163,7 @@ if (! $env){
     exit(1);
 }
 
-$env_good = '';
+$env_good = $success_icon.' Your .env file is located at '.getcwd()."/.env \n";
 $env_bad = '';
 
 // Loop through each line of the .env
@@ -261,7 +261,7 @@ if ($env_bad !='') {
 
 if(!$skip_php_checks){
     echo "\n\e[95m--------------------------------------------------------\n";
-    echo "STEP 2: Checking PHP requirements: (Required PHP >=". $php_min_works. " - <".$php_max_wontwork.") \e[39m\n";
+    echo "STEP 2: Checking PHP requirements: (Required PHP >=". $php_min_works. " - <".$php_max_wontwork.")\n";
     echo "--------------------------------------------------------\e[39m\n\n";
 
     if ((version_compare(phpversion(), $php_min_works, '>=')) && (version_compare(phpversion(), $php_max_wontwork, '<'))) {
@@ -444,7 +444,8 @@ if ((strpos('git version', $git_version)) === false) {
     echo $git_fetch;
     echo '-- '.$git_stash;
     echo '-- '.$git_checkout;
-    echo '-- '.$git_pull."\n";
+    echo '-- '.$git_pull;
+    echo "\n";
 } else {
     echo "Git is NOT installed. You can still use this upgrade script to run common \n";
     echo "migration commands, but you will have to manually download the updated files. \n\n";
@@ -540,7 +541,7 @@ echo "--------------------------------------------------------\e[39m\n\n";
 exec('php artisan down',  $down_results, $return_code);
 echo '-- ' . implode("\n", $down_results) . "\n";
 if ($return_code > 0) {
-    die("Something went wrong with downing your site. This can't be good. Please investigate the error. Aborting!n\n");
+    die("Something went wrong with downing your site. This can't be good. Please investigate the error and be sure to check https://snipe-it.readme.io/docs/common-issues and https://snipe-it.readme.io/docs/installation-issues for solutions to common upgrading issues. Aborting!\n\n");
 }
 unset($return_code);
 
@@ -580,7 +581,7 @@ echo "--------------------------------------------------------\e[39m\n\n";
 
 if ((!file_exists('storage/oauth-public.key')) || (!file_exists('storage/oauth-private.key'))) {
     echo $info_icon." No OAuth keys detected. Running passport install now.\n\n";
-    $passport = shell_exec('php artisan passport:install');
+    $passport = shell_exec('php artisan passport:install --no-interaction');
     echo $passport;
 } else {
     echo $success_icon." OAuth keys detected. Skipping passport install.\n\n";

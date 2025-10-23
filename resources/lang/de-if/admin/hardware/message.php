@@ -11,7 +11,7 @@ return [
     'warning_audit_date_mismatch' 	=> 'Das nächste Prüfdatum dieses Gegenstands (:next_audit_date) liegt vor dem letzten Prüfdatum (:last_audit_date). Bitte aktualisieren Sie das nächste Prüfdatum.',
     'labels_generated'   => 'Labels wurden erfolgreich generiert.',
     'error_generating_labels' => 'Fehler beim Generieren der Labels.',
-    'no_assets_selected' => 'Keine Gegenstände ausgewählt.',
+    'no_assets_selected' => 'Keine Assets ausgewählt.',
 
     'create' => [
         'error'   		=> 'Gegenstand wurde nicht erstellt. Bitte versuche es erneut. :(',
@@ -19,6 +19,11 @@ return [
         'success_linked' => 'Gegenstand mit Tag :tag wurde erfolgreich erstellt. <strong><a href=":link" style="color: white;">Klicke hier, um</a></strong> anzuzeigen.',
         'multi_success_linked' => 'Gegenstand mit Tag :links wurde erfolgreich erstellt.|:count Gegenstände wurden erfolgreich erstellt. :links.',
         'partial_failure' => 'Ein Gegenstand konnte nicht erstellt werden. Grund: :failures|:count Gegenstände konnten nicht erstellt werden. Gründe: :failures',
+        'target_not_found' => [
+            'user' => 'Der zugeordnete Benutzer konnte nicht gefunden werden.',
+            'asset' => 'Der zugewiesene Gegenstand konnte nicht gefunden werden.',
+            'location' => 'Der zugeordnete Standort konnte nicht gefunden werden.',
+        ],
     ],
 
     'update' => [
@@ -77,30 +82,31 @@ return [
     ],
 
     'checkout' => [
-        'error'   		=> 'Gegenstand konnte nicht herausgegeben werden. Bitte versuche es erneut',
-        'success' 		=> 'Gegenstand wurde erfolgreich herausgegeben.',
+        'error'   		=> 'Asset konnte nicht herausgegeben werden. Bitte versuche es erneut',
+        'success' 		=> 'Asset wurde erfolgreich herausgegeben.',
         'user_does_not_exist' => 'Dieser Benutzer ist ungültig. Bitte versuche es erneut.',
-        'not_available' => 'Dieser Gegenstand kann nicht herausgegeben werden!',
-        'no_assets_selected' => 'Du musst mindestens einen Gegenstand aus der Liste auswählen',
+        'not_available' => 'Dieses Asset kann nicht herausgegeben werden!',
+        'no_assets_selected' => 'Du musst mindestens ein Asset aus der Liste auswählen',
     ],
 
     'multi-checkout' => [
-        'error'   => 'Gegenstand wurde nicht ausgecheckt, bitte versuche es erneut.|Gegenstände wurden nicht ausgecheckt, bitte versuche es erneut',
-        'success' => 'Gegenstand erfolgreich ausgecheckt.|Gegenstände erfolgreich ausgecheckt.',
+        'error'   => 'Asset wurde nicht ausgecheckt, bitte versuche es erneut.|Assets wurden nicht ausgecheckt, bitte versuche es erneut',
+        'success' => 'Asset erfolgreich ausgecheckt.|Assets erfolgreich ausgecheckt.',
     ],
 
     'checkin' => [
-        'error'   		=> 'Gegenstand konnte nicht zurückgenommen werden. Bitte versuche es erneut',
-        'success' 		=> 'Gegenstand wurde erfolgreich zurückgenommen.',
+        'error'   		=> 'Asset konnte nicht zurückgenommen werden. Bitte versuche es erneut',
+        'success' 		=> 'Asset wurde erfolgreich zurückgenommen.',
         'user_does_not_exist' => 'Dieser Benutzer ist ungültig. Bitte versuche es erneut.',
-        'already_checked_in'  => 'Dieser Gegenstand ist bereits zurückgenommen.',
+        'already_checked_in'  => 'Dieses Asset ist bereits zurückgenommen.',
 
     ],
 
     'requests' => [
-        'error'   		=> 'Der Gegenstand wurde nicht angefordert, bitte versuche es erneut',
-        'success' 		=> 'Gegenstand erfolgreich angefordert.',
-        'canceled'      => 'Herausgeben erfolgreich abgebrochen',
+        'error'   		=> 'Das Asset wurde nicht angefordert, bitte versuche es erneut.',
+        'success' 		=> 'Anfrage erfolgreich eingereicht.',
+        'canceled'      => 'Anfrage erfolgreich abgebrochen.',
+        'cancel'        => 'Storniere diese Gegenstandanfrage',
     ],
 
 ];

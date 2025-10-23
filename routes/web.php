@@ -5,6 +5,9 @@ use App\Http\Controllers\ActionlogController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BulkCategoriesController;
+use App\Http\Controllers\BulkManufacturersController;
+use App\Http\Controllers\BulkSuppliersController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
@@ -13,7 +16,7 @@ use App\Http\Controllers\DepreciationsController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\LabelsController;
-use App\Http\Controllers\LocationsController;
+use App\Http\Controllers\UploadedFilesController;
 use App\Http\Controllers\ManufacturersController;
 use App\Http\Controllers\ModalController;
 use App\Http\Controllers\NotesController;
@@ -43,6 +46,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('categories', CategoriesController::class, [
         'parameters' => ['category' => 'category_id'],
     ]);
+
+    Route::post('categories/bulk/delete', [BulkCategoriesController::class, 'destroy'])->name('categories.bulk.delete');
   
     /*
     * Labels
@@ -52,62 +57,33 @@ Route::group(['middleware' => 'auth'], function () {
         [LabelsController::class, 'show']
     )->where('labelName', '.*')->name('labels.show');
 
-    /*
-     * Locations
-     */
-    Route::group(['prefix' => 'locations', 'middleware' => ['auth']], function () {
+    Route::get('/test-email', function () {
+        $mailable = new \App\Mail\CheckoutComponentMail(
 
-        Route::post(
-            'bulkdelete',
-            [LocationsController::class, 'postBulkDelete']
-        )->name('locations.bulkdelete.show');
-
-        Route::post(
-            'bulkedit',
-            [LocationsController::class, 'postBulkDeleteStore']
-        )->name('locations.bulkdelete.store');
-
-        Route::post(
-            '{location}/restore',
-            [LocationsController::class, 'postRestore']
-        )->name('locations.restore');
-
-
-        Route::get('{locationId}/clone',
-            [LocationsController::class, 'getClone']
-        )->name('clone/location');
-
-        Route::get(
-            '{locationId}/printassigned',
-            [LocationsController::class, 'print_assigned']
-        )->name('locations.print_assigned');
-
-        Route::get(
-            '{locationId}/printallassigned',
-            [LocationsController::class, 'print_all_assigned']
-        )->name('locations.print_all_assigned');
-
+        );
+        return $mailable->render(); // dumps HTML
     });
-
-    Route::resource('locations', LocationsController::class, [
-        'parameters' => ['location' => 'location_id'],
-    ]);
-
-
     /*
     * Manufacturers
     */
 
     Route::group(['prefix' => 'manufacturers', 'middleware' => ['auth']], function () {
         Route::post('{manufacturers_id}/restore', [ManufacturersController::class, 'restore'] )->name('restore/manufacturer');
+        Route::post('seed', [ManufacturersController::class, 'seed'] )->name('manufacturers.seed');
+
+
     });
 
     Route::resource('manufacturers', ManufacturersController::class);
+
+    Route::post('manufacturers/bulk/delete', [BulkManufacturersController::class, 'destroy'])->name('manufacturers.bulk.delete');
 
     /*
     * Suppliers
     */
     Route::resource('suppliers', SuppliersController::class);
+
+    Route::post('suppliers/bulk/delete', [BulkSuppliersController::class, 'destroy'])->name('suppliers.bulk.delete');
 
     /*
     * Depreciations
@@ -414,7 +390,6 @@ Route::group(['prefix' => 'account', 'middleware' => ['auth']], function () {
         $trail->parent('home')
             ->push(trans('general.requested_assets_menu'), route('account.requested')));
 
-    // Profile
     Route::get(
         'requestable-assets', [ViewAssetsController::class, 'getRequestableIndex'])
         ->name('requestable-assets')
@@ -422,15 +397,25 @@ Route::group(['prefix' => 'account', 'middleware' => ['auth']], function () {
         $trail->parent('home')
             ->push(trans('general.requestable_items'), route('requestable-assets')));
 
-    Route::post(
-        'request-asset/{assetId}',
-        [ViewAssetsController::class, 'getRequestAsset']
-    )->name('account/request-asset');
 
-    Route::post(
-        'request/{itemType}/{itemId}/{cancel_by_admin?}/{requestingUser?}',
-        [ViewAssetsController::class, 'getRequestItem']
-    )->name('account/request-item');
+    Route::post('request-asset/{asset}', [ViewAssetsController::class, 'store'])
+        ->name('account.request-asset');
+
+    Route::post('request-asset/{asset}/cancel', [ViewAssetsController::class, 'destroy'])
+        ->name('account.request-asset.cancel');
+
+    Route::post('request/{itemType}/{itemId}/{cancel_by_admin?}/{requestingUser?}', [ViewAssetsController::class, 'getRequestItem'])
+        ->name('account/request-item');
+
+    Route::get(
+        'display-sig/{filename}',
+        [ProfileController::class, 'displaySig']
+    )->name('profile.signature.view');
+    
+    Route::get(
+        'stored-eula-file/{filename}',
+        [ProfileController::class, 'getStoredEula']
+    )->name('profile.storedeula.download');
 
     // Account Dashboard
     Route::get('/', [ViewAssetsController::class, 'getIndex'])
@@ -498,18 +483,18 @@ Route::group(['prefix' => 'reports', 'middleware' => ['auth']], function () {
             ->push(trans('general.depreciation_report'), route('reports.audit')));
 
     Route::get(
-        'asset_maintenances', [ReportsController::class, 'getAssetMaintenancesReport'])
-        ->name('reports/asset_maintenances')
+        'maintenances', [ReportsController::class, 'getMaintenancesReport'])
+        ->name('ui.reports.maintenances')
         ->breadcrumbs(fn (Trail $trail) =>
         $trail->parent('home')
-            ->push(trans('general.asset_maintenance_report'), route('reports/asset_maintenances')));
+            ->push(trans('general.asset_maintenance_report'), route('ui.reports.maintenances')));
 
     // Is this still used?
-    Route::get('export/asset_maintenances', [ReportsController::class, 'exportAssetMaintenancesReport'])
-        ->name('reports/export/asset_maintenances')
+    Route::get('export/maintenances', [ReportsController::class, 'exportMaintenancesReport'])
+        ->name('reports/export/maintenances')
         ->breadcrumbs(fn (Trail $trail) =>
         $trail->parent('home')
-            ->push(trans('general.asset_maintenance_report'), route('reports/export/asset_maintenances')));
+            ->push(trans('general.asset_maintenance_report'), route('reports/export/maintenances')));
 
     Route::get('licenses', [ReportsController::class, 'getLicenseReport'])
         ->name('reports/licenses')
@@ -532,7 +517,8 @@ Route::group(['prefix' => 'reports', 'middleware' => ['auth']], function () {
         $trail->parent('home')
             ->push(trans('general.custom_report'), route('reports/custom')));
 
-    Route::post('custom', [ReportsController::class, 'postCustom']);
+    Route::post('custom', [ReportsController::class, 'postCustom'])
+        ->name('reports.post-custom');
 
 
     Route::prefix('templates')
@@ -716,6 +702,39 @@ Route::group(['middleware' => 'web'], function () {
         'logout',
         [LoginController::class, 'logout']
     )->name('logout.post');
+
+
+
+    /**
+     * Uploaded files API routes
+     */
+
+    // Get a file
+    Route::get('{object_type}/{id}/files/{file_id}',
+        [
+            UploadedFilesController::class,
+            'show'
+        ]
+    )->name('ui.files.show')
+        ->where(['object_type' => 'assets|audits|maintenances|hardware|models|users|locations|accessories|consumables|licenses|components']);
+
+    // Upload files(s)
+    Route::post('{object_type}/{id}/files',
+        [
+            UploadedFilesController::class,
+            'store'
+        ]
+    )->name('ui.files.store')
+        ->where(['object_type' => 'assets|audits|maintenances|hardware|models|users|locations|accessories|consumables|licenses|components']);
+
+    // Delete files(s)
+    Route::delete('{object_type}/{id}/files/{file_id}/delete',
+        [
+            UploadedFilesController::class,
+            'destroy'
+        ]
+    )->name('ui.files.destroy')
+        ->where(['object_type' => 'assets|maintenances|hardware|models|users|locations|accessories|consumables|licenses|components']);
 });
 
 
